@@ -2,3 +2,5 @@
 /.vuepress
 /node_modules
 /docs/.vuepress
+/docs/README.md
+package.json
