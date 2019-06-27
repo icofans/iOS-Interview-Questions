@@ -31,11 +31,11 @@ loadView方法会在每次访问UIViewController的view(比如controller.view、
 
 这里要提一下 [super loadView]，[super loadView]做了下面几件事。
 
-- 1> 它会先去查找与UIViewController相关联的xib文件，通过加载xib文件来创建UIViewController的view，如果在初始化UIViewController指定了xib文件名，就会根据传入的xib文件名加载对应的xib文件，如果没有明显地传xib文件名，就会加载跟UIViewController同名的xib文件
+- 它会先去查找与UIViewController相关联的xib文件，通过加载xib文件来创建UIViewController的view，如果在初始化UIViewController指定了xib文件名，就会根据传入的xib文件名加载对应的xib文件，如果没有明显地传xib文件名，就会加载跟UIViewController同名的xib文件
 
-- 2> 如果没有找到相关联的xib文件，就会创建一个空白的UIView，然后赋值给UIViewController的view属性
+- 如果没有找到相关联的xib文件，就会创建一个空白的UIView，然后赋值给UIViewController的view属性
 
-因此在重写loadView方法，不需要调用[super loadView]方法。
+综上，在需要自定义UIViewController的view时，可以通过重写loadView方法且不需要调用[super loadView]方法。
 
 ## 6.使用 drawRect有什么影响？
 
