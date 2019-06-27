@@ -27,8 +27,15 @@ UIResponder类是专门用来响应用户的操作处理各种事件的，包括
 
 ## 5.loadView的作用？
 
-loadView 用来自定义 view，只要实现了这个方法，其他通过 xib 或 storyboard 创建的 view 都不会被加载
+loadView方法会在每次访问UIViewController的view(比如controller.view、self.view)而且view为nil时会被调用，此方法主要用来负责创建UIViewController的view(重写loadView方法，并且不需要调用[super loadView])
 
+这里要提一下 [super loadView]，[super loadView]做了下面几件事。
+
+- 1> 它会先去查找与UIViewController相关联的xib文件，通过加载xib文件来创建UIViewController的view，如果在初始化UIViewController指定了xib文件名，就会根据传入的xib文件名加载对应的xib文件，如果没有明显地传xib文件名，就会加载跟UIViewController同名的xib文件
+
+- 2> 如果没有找到相关联的xib文件，就会创建一个空白的UIView，然后赋值给UIViewController的view属性
+
+因此在重写loadView方法，不需要调用[super loadView]方法。
 
 ## 6.使用 drawRect有什么影响？
 
