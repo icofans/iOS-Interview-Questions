@@ -170,7 +170,31 @@ App启动时间可以通过xcode提供的工具来度量，在Xcode的Product->S
 
 - 优化，如阴影，在绘制时添加阴影的路径
 
-## 6.日常如何检查内存泄露？
+## 6.怎么检测图层混合
+
+1、模拟器debug中color blended layers红色区域表示图层发生了混合
+
+2、Instrument-选中Core Animation-勾选Color Blended Layers
+
+避免图层混合：
+
+- 确保控件的opaque属性设置为true，确保backgroundColor和父视图颜色一致且不透明
+
+- 如无特殊需要，不要设置低于1的alpha值
+
+- 确保UIImage没有alpha通道
+
+UILabel图层混合解决方法：
+
+iOS8以后设置背景色为非透明色并且设置label.layer.masksToBounds=YES让label只会渲染她的实际size区域，就能解决UILabel的图层混合问题
+
+iOS8 之前只要设置背景色为非透明的就行
+
+为什么设置了背景色但是在iOS8上仍然出现了图层混合呢？
+
+UILabel在iOS8前后的变化，在iOS8以前，UILabel使用的是CALayer作为底图层，而在iOS8开始，UILabel的底图层变成了_UILabelLayer，绘制文本也有所改变。在背景色的四周多了一圈透明的边，而这一圈透明的边明显超出了图层的矩形区域，设置图层的masksToBounds为YES时，图层将会沿着Bounds进行裁剪 图层混合问题解决了
+
+## 7.日常如何检查内存泄露？
 
 - 目前我知道的方式有以下几种
 
