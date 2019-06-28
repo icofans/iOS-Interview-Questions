@@ -1,5 +1,5 @@
 # 内存管理
-## 1.什么情况使用 weak 关键字，相比 assign 有什么不同？
+## 1.什么情况使用weak关键字，相比assign有什么不同？
 - 什么情况使用 weak 关键字？
 
     在 ARC 中,在有可能出现循环引用的时候,往往要通过让其中一端使用 weak 来解决,比如: delegate 代理属性
@@ -12,7 +12,7 @@
 
     assign 可以用非 OC 对象,而 weak 必须用于 OC 对象
 
-## 2.如何让自己的类用 copy 修饰符？如何重写带 copy 关键字的 setter？
+## 2.如何让自己的类用copy修饰符？如何重写带copy关键字的setter？
 
 - 若想令自己所写的对象具有拷贝功能，则需实现 NSCopying 协议。如果自定义的对象分为可变版本与不可变版本，那么就要同时实现 NSCopying 与 NSMutableCopying 协议。
 
@@ -37,7 +37,23 @@
     }
     ```
 
-## 3.@property 的本质是什么？ivar、getter、setter 是如何生成并添加到这个类中的
+## 3.深拷贝与浅拷贝
+
+浅拷贝只是对指针的拷贝，拷贝后两个指针指向同一个内存空间，深拷贝不但对指针进行拷贝，而且对指针指向的内容进行拷贝，经深拷贝后的指针是指向两个不同地址的指针。
+
+当对象中存在指针成员时，除了在复制对象时需要考虑自定义拷贝构造函数，还应该考虑以下两种情形：
+
+- 当函数的参数为对象时，实参传递给形参的实际上是实参的一个拷贝对象，系统自动通过拷贝构造函数实现；
+
+- 当函数的返回值为一个对象时，该对象实际上是函数内对象的一个拷贝，用于返回函数调用处。
+
+
+copy方法:如果是非可扩展类对象，则是浅拷贝。如果是可扩展类对象，则是深拷贝。
+
+mutableCopy方法:无论是可扩展类对象还是不可扩展类对象，都是深拷贝。
+
+
+## 4.@property的本质是什么？ivar、getter、setter是如何生成并添加到这个类中的
 
 - @property 的本质是实例变量（ivar）+存取方法（access method ＝ getter + setter）,即 @property = ivar + getter + setter;
     
@@ -47,13 +63,13 @@
     
     完成属性定义后，编译器会自动编写访问这些属性所需的方法，此过程叫做“自动合成”(autosynthesis)。需要强调的是，这个过程由编译 器在编译期执行，所以编辑器里看不到这些“合成方法”(synthesized method)的源代码。除了生成方法代码 getter、setter 之外，编译器还要自动向类中添加适当类型的实例变量，并且在属性名前面加下划线，以此作为实例变量的名字。在前例中，会生成两个实例变量，其名称分别为 _firstName 与 _lastName。也可以在类的实现代码里通过 @synthesize 语法来指定实例变量的名字.
 
-## 4.@protocol 和 category 中如何使用 @property
+## 5.@protocol和category中如何使用@property
 
 - 在 protocol 中使用 property 只会生成 setter 和 getter 方法声明,我们使用属性的目的,是希望遵守我协议的对象能实现该属性
 
 - category 使用 @property 也是只会生成 setter 和 getter 方法的声明,如果我们真的需要给 category 增加属性的实现,需要借助于运行时的两个函数：objc_setAssociatedObject和objc_getAssociatedObject
 
-## 5.简要说一下 @autoreleasePool 的数据结构？？
+## 6.简要说一下@autoreleasePool的数据结构？？
 
 简单说是双向链表，每张链表头尾相接，有 parent、child指针
 
@@ -61,15 +77,15 @@
 
 最外层池子的顶端会有一个next指针。当链表容量满了，就会在链表的顶端，并指向下一张表。
 
-## 6.BAD_ACCESS在什么情况下出现？
+## 7.BAD_ACCESS在什么情况下出现？
 
 访问了悬垂指针，比如对一个已经释放的对象执行了release、访问已经释放对象的成员变量或者发消息。 死循环
 
-## 7.使用CADisplayLink、NSTimer有什么注意点？
+## 8.使用CADisplayLink、NSTimer有什么注意点？
 
 CADisplayLink、NSTimer会造成循环引用，可以使用YYWeakProxy或者为CADisplayLink、NSTimer添加block方法解决循环引用
 
-## 8.iOS内存分区情况
+## 9.iOS内存分区情况
 
 - 栈区（Stack）
 
@@ -109,7 +125,7 @@ CADisplayLink、NSTimer会造成循环引用，可以使用YYWeakProxy或者为C
     
     - 当一个 app 启动后，代码区、常量区、全局区大小就已经固定，因此指向这些区的指针不会产生崩溃性的错误。而堆区和栈区是时时刻刻变化的（堆的创建销毁，栈的弹入弹出），所以当使用一个指针指向这个区里面的内存时，一定要注意内存是否已经被释放，否则会产生程序崩溃（也即是野指针报错）
 
-## 9.iOS内存管理方式
+## 10.iOS内存管理方式
 
 - Tagged Pointer（小对象）
 
@@ -170,4 +186,74 @@ CADisplayLink、NSTimer会造成循环引用，可以使用YYWeakProxy或者为C
         
     弱引用表也是一张哈希表的结构，其内部包含了每个对象对应的弱引用表 weak_entry_t，而 weak_entry_t 是一个结构体数组，其中包含的则是每一个对象弱引用的对象所对应的弱引用指针。
 
+## 11.循环引用
 
+循环引用的实质：多个对象相互之间有强引用，不能释放让系统回收。
+
+如何解决循环引用？
+
+1、避免产生循环引用，通常是将 strong 引用改为 weak 引用。 比如在修饰属性时用weak 在block内调用对象方法时，使用其弱引用，这里可以使用两个宏
+
+#define WS(weakSelf)            __weak __typeof(&*self)weakSelf = self; // 弱引用
+
+#define ST(strongSelf)          __strong __typeof(&*self)strongSelf = weakSelf; //使用这个要先声明weakSelf
+还可以使用__block来修饰变量 在MRC下，__block不会增加其引用计数，避免了循环引用 在ARC下，__block修饰对象会被强引用，无法避免循环引用，需要手动解除。
+
+2、在合适时机去手动断开循环引用。 通常我们使用第一种。
+
+- 代理(delegate)循环引用属于相互循环引用
+
+    delegate 是iOS中开发中比较常遇到的循环引用，一般在声明delegate的时候都要使用弱引用 weak,或者assign,当然怎么选择使用assign还是weak，MRC的话只能用assign，在ARC的情况下最好使用weak，因为weak修饰的变量在释放后自动指向nil，防止野指针存在
+
+- NSTimer循环引用属于相互循环使用
+
+    在控制器内，创建NSTimer作为其属性，由于定时器创建后也会强引用该控制器对象，那么该对象和定时器就相互循环引用了。 如何解决呢？ 这里我们可以使用手动断开循环引用： 如果是不重复定时器，在回调方法里将定时器invalidate并置为nil即可。 如果是重复定时器，在合适的位置将其invalidate并置为nil即可
+
+3、block循环引用
+
+一个简单的例子：
+
+``` c
+@property (copy, nonatomic) dispatch_block_t myBlock;
+@property (copy, nonatomic) NSString *blockString;
+
+- (void)testBlock {
+    self.myBlock = ^() {
+        NSLog(@"%@",self.blockString);
+    };
+}
+```
+
+由于block会对block中的对象进行持有操作,就相当于持有了其中的对象，而如果此时block中的对象又持有了该block，则会造成循环引用。 解决方案就是使用__weak修饰self即可
+
+``` c
+__weak typeof(self) weakSelf = self;
+
+self.myBlock = ^() {
+        NSLog(@"%@",weakSelf.blockString);
+ };
+ ```
+
+并不是所有block都会造成循环引用。 只有被强引用了的block才会产生循环引用 而比如dispatch_async(dispatch_get_main_queue(), ^{}),[UIView animateWithDuration:1 animations:^{}]这些系统方法等 或者block并不是其属性而是临时变量,即栈block
+
+``` c
+[self testWithBlock:^{
+    NSLog(@"%@",self);
+}];
+
+- (void)testWithBlock:(dispatch_block_t)block {
+    block();
+}
+```
+还有一种场景，在block执行开始时self对象还未被释放，而执行过程中，self被释放了，由于是用weak修饰的，那么weakSelf也被释放了，此时在block里访问weakSelf时，就可能会发生错误(向nil对象发消息并不会崩溃，但也没任何效果)。 对于这种场景，应该在block中对 对象使用__strong修饰，使得在block期间对 对象持有，block执行结束后，解除其持有。
+
+``` c
+__weak typeof(self) weakSelf = self;
+
+self.myBlock = ^() {
+
+        __strong __typeof(self) strongSelf = weakSelf;
+
+        [strongSelf test];
+ };
+```
