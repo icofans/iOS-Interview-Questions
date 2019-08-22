@@ -6,7 +6,7 @@
 	
 	替换方法.context[@"copyText"]
 	
-	注入对象:遵守协议NSExport,设置context[@
+	注入对象:遵守协议JSExport,设置context[@
 - oc调用js代码两种方式
 
 	通过webVIew调用 webView stringByEvaluatingJavaScriptFromString: 调用
