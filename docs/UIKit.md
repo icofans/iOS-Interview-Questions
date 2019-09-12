@@ -15,11 +15,9 @@
 
 ## 3.setNeedsDisplay 和 layoutIfNeeded 两者是什么关系？
 
-setNeedsDisplay 是给当前的视图做了标记。
+UIView的setNeedsDisplay和setNeedsLayout两个方法都是异步执行的。而setNeedsDisplay会自动调用drawRect方法，这样可以拿到UIGraphicsGetCurrentContext进行绘制；而setNeedsLayout会默认调用layoutSubViews，给当前的视图做了标记；layoutIfNeeded 查找是否有标记，如果有标记及立刻刷新。
 
-layoutIfNeeded 查找是否有标记，如果有标记及立刻刷新。
-
-只有这二者合起来使用，才会起到立刻刷新的效果。
+只有setNeedsLayout和layoutIfNeeded这二者合起来使用，才会起到立刻刷新的效果。
 
 ## 4.谈谈对UIResponder的理解
 
