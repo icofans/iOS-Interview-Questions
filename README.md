@@ -1,6 +1,6 @@
 ### iOS面试题整理
 
-在线查看地址：https://ios.nobady.cn
+在线查看地址：[https://nobady-ios.pages.dev/](https://nobady-ios.pages.dev/)
 
 iOS面试相关问题整理，做这个的初心是希望能巩固自己的基础知识，当然也希望能帮助更多的开发者，如发现答案不准确或者不完整的可前往 Github 提交完善。
 
